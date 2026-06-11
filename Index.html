@@ -3444,6 +3444,9 @@ section.part section.chunk div.dkb [style*="color:#d4e8ff"],div.dkb [style*="col
 #lib-cites{background:linear-gradient(180deg,#15122a,#0d0b1a);border:1px solid #34304e;border-radius:12px;padding:18px 20px}
 /* urlchips carry dark-amber inner links designed for the page; on the dark chip, keep chip-light. */
 .urlchip a, .urlchip a:visited{color:#dff3f6 !important}
+/* reference lists use hanging indents (negative text-indent); the chip inherits it and
+   clips its own first characters against overflow:hidden — reset indent inside every chip. */
+.urlchip, .urlchip *{text-indent:0 !important}
 /* refzone normalisation must not darken text that sits on dark surfaces */
 section.part.refzone section.chunk .xtab th, section.part.refzone section.chunk .xtab th *{color:#fbf6ea !important}
 section.part.refzone section.chunk a.urlchip, section.part.refzone section.chunk a.urlchip *{color:#dff3f6 !important;text-decoration:none}
