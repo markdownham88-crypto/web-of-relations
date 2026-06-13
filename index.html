@@ -2637,16 +2637,31 @@ document.documentElement.className='js';
     var ch=el.closest('.chunk'); if(ch) ch.classList.add('in');
     return part;
   }
+  window.revealPartOf=revealPartOf;
   window.__exactScroll=function(tgt,block){
     if(!tgt)return;
     var de=document.documentElement;
+    /* CRITICAL: html{scroll-behavior:smooth} animates EVERY programmatic scroll, which on a
+       document this large glides for seconds through all intervening content and reads as a
+       massive overshoot. Force instant scrolling for the landing, then restore. */
+    var prevBehav=de.style.scrollBehavior;
+    de.style.scrollBehavior='auto';
+    /* Reveal ALL parts so every section reports its REAL height (content-visibility:auto
+       otherwise leaves off-screen sections at estimated intrinsic sizes). */
     de.classList.add('orx-cvoff');
-    void document.body.offsetHeight; /* exact layout; sizes become 'remembered' for the session */
-    tgt.scrollIntoView({block:block||'start'});
-    requestAnimationFrame(function(){requestAnimationFrame(function(){
+    void document.body.offsetHeight; /* force synchronous layout at real heights */
+    var topPad=72; /* clear the fixed header/pill */
+    function absY(el){var y=0,n=el;while(n){y+=n.offsetTop||0;n=n.offsetParent;}return y;}
+    window.scrollTo(0, Math.max(0, absY(tgt)-topPad)); /* ONE instant jump */
+    void document.body.offsetHeight;
+    /* Keep parts visible briefly so re-collapse can't shift the landing, then re-collapse,
+       re-pin instantly to the same measured destination, and restore smooth behaviour. */
+    setTimeout(function(){
       de.classList.remove('orx-cvoff');
-      tgt.scrollIntoView({block:block||'start'}); /* re-pin after re-collapse */
-    });});
+      void document.body.offsetHeight;
+      window.scrollTo(0, Math.max(0, absY(tgt)-topPad));
+      de.style.scrollBehavior=prevBehav||'';
+    },200);
   };
   function jumpTo(id){
     var el=document.getElementById(id); if(!el) return;
@@ -3006,10 +3021,14 @@ document.documentElement.className='js';
       else{tgt.scrollIntoView({block:'start'});}
       if(carrier)flashFound(carrier);
     }
-    if(nav){nav.setAttribute('data-jump',id);nav.setAttribute('href','#'+id);setTimeout(function(){nav.click();},60);
-      /* take ownership of the scroll: cancel jumpTo's pending section-top corrections */
-      setTimeout(function(){if(mySeq!==window.__orNavSeq)return;window.__jmpSeq=(window.__jmpSeq||0)+1;},320);
-      setTimeout(function(){if(mySeq!==window.__orNavSeq)return;landOn();},800);
+    if(nav){nav.setAttribute('data-jump',id);nav.setAttribute('href','#'+id);
+      /* OWN THE SCROLL FROM THE START: no smooth jumpTo flyby (it overshoots while
+         content-visibility toggles heights mid-animation). Reveal the target's section,
+         pre-empt any pending jumpTo correction, then land instantly via exactScroll. */
+      window.__jmpSeq=(window.__jmpSeq||0)+1;
+      try{var _t0=(carrier&&carrier.isConnected)?carrier:document.getElementById(id); if(_t0&&window.revealPartOf)window.revealPartOf(_t0);}catch(_e){}
+      landOn();
+      setTimeout(function(){if(mySeq!==window.__orNavSeq)return;window.__jmpSeq=(window.__jmpSeq||0)+1;landOn();},90);
       /* cheap safety: only re-land if the target drifted out (rare after the exact pass) */
       [1200,2300,3600,5200].forEach(function(t){
         setTimeout(function(){if(mySeq!==window.__orNavSeq)return;
