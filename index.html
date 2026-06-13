@@ -5292,5 +5292,8 @@ table.tw td:first-child{font-weight:600;color:#2a2440}
 .disq-fail .disq-lbl{display:block;font-family:Arial,Helvetica,sans-serif;font-size:8.2pt;letter-spacing:.14em;text-transform:uppercase;color:#E0B84A;font-weight:700;margin-bottom:6px}
 .disq-fail i,.disq-fail cite{color:#f0e6c8;font-style:italic}
 @media (max-width:640px){.disq-thesis,.disq-or,.disq-fail{padding:11px 13px}}
+/* Gold COMPARE cross-link strips sit on a dark maroon gradient; the generic .chunk a override (#8a5410) renders them near-invisible. Restore the intended pale-gold link + gold dotted underline for exactly these strip links, scoped by their unique inline signature. */
+a[style*="dotted #C8A24A"], #sheet a[style*="dotted #C8A24A"], section.part.refzone section.chunk a[style*="dotted #C8A24A"]{color:#F4DC96 !important;border-bottom-color:#C8A24A !important;text-decoration:none !important}
+a[style*="dotted #C8A24A"]:hover, #sheet a[style*="dotted #C8A24A"]:hover{color:#FBEAB0 !important;border-bottom-style:solid !important}
 </style><script id="wor-complete-sentinel">window.__worComplete=true;(function(){var b=document.getElementById('wor-trunc-banner');if(b)b.parentNode.removeChild(b);try{sessionStorage.removeItem('worAutoReload');}catch(e){}})();(function(){if(window.__orPrewarmed)return;window.__orPrewarmed=true;function prewarm(){try{var de=document.documentElement;var sx=window.pageXOffset,sy=window.pageYOffset;de.classList.add('orx-cvoff');void document.body.offsetHeight;de.classList.remove('orx-cvoff');void document.body.offsetHeight;window.scrollTo(sx,sy);window.__orLayoutWarm=true;}catch(e){}}if('requestIdleCallback' in window){requestIdleCallback(function(){prewarm();},{timeout:4000});}else{setTimeout(prewarm,1800);}})();</script></body>
 </html>
