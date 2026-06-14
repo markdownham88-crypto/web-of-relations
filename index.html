@@ -4468,7 +4468,7 @@ document.documentElement.className='js';
     results.innerHTML=html;
   }
   function openM(){modal.classList.add('or-open');setTimeout(function(){q.focus();},40);if(!INDEX)build();}
-  window.__openOracle=function(s){openM();if(s!=null){var qq=document.getElementById('or-q');if(qq){qq.value=s;}search(s);}};
+  window.__openOracle=function(s){openM();if(s!=null){var qq=document.getElementById('or-q');if(qq){qq.value=s;}window.__orLastToks=parse(s);search(s);}};
   function closeM(){modal.classList.remove('or-open');}
   fab.addEventListener('click',openM);
   var ob=document.getElementById('or-open'); if(ob) ob.addEventListener('click',openM);
